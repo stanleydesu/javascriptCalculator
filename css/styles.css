@@ -1,3 +1,22 @@
 :root {
+	--dark: #222;
+	--main: #F60;
+	--red: ;
+}
 
+body {
+	margin: 0;
+	background-color: var(--dark);
+	font-family: "Helvetica Neue", sans-serif;
+}
+
+#calculator {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 300px;
+	height: 400px;
+	background-color: var(--main);
+	border-radius: 5px;
 }

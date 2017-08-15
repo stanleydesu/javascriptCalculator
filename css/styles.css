@@ -1,7 +1,12 @@
 :root {
 	--dark: #222;
-	--main: #F60;
-	--red: ;
+	--main: #F8F;
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;: 
 }
 
 body {
@@ -15,8 +20,23 @@ body {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 300px;
+	width: 280px;
 	height: 400px;
+	padding: 1em;
 	background-color: var(--main);
 	border-radius: 5px;
+}
+
+#screen {
+	position: relative;
+	height: 2em;
+	padding-left: .5em;
+	padding-right: .5em;
+	border-radius: 4px;
+	background-color: var(--dark);
+	color: var(--main);
+	
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 }

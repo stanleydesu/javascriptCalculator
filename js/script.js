@@ -57,7 +57,7 @@
 			}
 		};
 		this.getExpression = function() {
-			return expression.join(' ');
+			return expression.join('');
 		}
 		this.getResult = function() {
 			return result;
@@ -104,7 +104,8 @@
 	window.addEventListener('keydown', function(e) {
 		let keycode = e.keyCode || e.which,
 			key = getKeyPressed(keycode, e.shiftKey),
-			type = typeof(key);
+			type = typeof(key),
+			lastInput = calculator.lastInput();
 
 		// if user wants to evaluate expression
 		if (key === '=' || keycode === 13) {
@@ -115,12 +116,13 @@
 		} else if (key !== undefined) {
 			// if number was pressed and last input was number
 			if (type === 'number' && typeof(calculator.lastInput()) === 'number') {
-				// if last value of expression isn't result, continue adding digits to current number
-				if (calculator.lastInput() !== calculator.getResult()) {
-					calculator.addInput((calculator.clearLast() * 10) + key);
-				} else {
+				// if last value of expression is result, clear expression
+				// fallback for NaN added
+				if (lastInput === calculator.getResult() || lastInput !== lastInput) {
 					calculator.clearAll();
 					calculator.addInput(key);
+				} else {
+					calculator.addInput((calculator.clearLast() * 10) + key);
 				}
 			} else {
 				calculator.addInput(key);

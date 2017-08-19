@@ -1,11 +1,22 @@
 "use strict";
 
 (function() {
-	// calculator constructor with inbuilt functions
+	// calculator constructor
 	function Calculator() {
 		// private variables
-		const expression = [];
-		let result = 0;
+		let expression = [],
+			result = 0;
+
+		// private functions
+
+		function isNumber(n) {
+			// if n is a number, Number(n) equates to the number, and not NaN
+			// if n is an operator (e.g. '.' or '*'), Number(n) equates to NaN
+			return !Object.is(NaN, Number(n)) || n !== n;
+		}
+
+		// functions the user can use to manipulate private variables
+
 		// clear expression array and result
 		this.clearAll = function() {
 			expression.length = 0;
@@ -15,52 +26,94 @@
 		this.clearLast = function() {
 			return expression.pop();
 		};
+		// check if current expression is valid
 		this.isValidExpression = function() {
-			let isNumber = true;
+			let shouldBeNumber = true;
 			for (let i = 0, len = expression.length; i < len; ++i) {
-				if (isNumber) {
-					if (typeof(expression[i]) !== 'number') {
+				if (shouldBeNumber) {
+					// if current isn't a number
+					if (!isNumber(expression[i])) {
 						return false;
 					}
-					isNumber = false;
+					shouldBeNumber = false;
 				} else {
-					if (typeof(expression[i]) === 'number') {
+					// if current is a number
+					if (isNumber(expression[i])) {
 						return false;
 					}
-					isNumber = true;				
+					shouldBeNumber = true;				
 				}
 			}
 			// if last value is a number, expression is complete
-			return typeof(expression[expression.length - 1]) === 'number';
+			return isNumber(expression[expression.length - 1]);
 		};
-		// evaluates the expression array and stores result into result
-		// and updates expression
+		// evaluates the expression array, expression array becomes result
 		this.evaluate = function() {
-			result = eval(expression.join(''));
-			expression.length = 0;
-			expression.push(result);
+			if (this.isValidExpression()) {
+				expression = expression.map(item => {
+					return isNumber(item) ? Number(item) : item;
+				});
+				result = Number(eval(expression.join('')).toFixed(5));
+				expression.length = 0;
+				expression.push(result);
+			}
 		};
+		// retrieves last input of expression array
 		this.lastInput = function() {
 			return expression[expression.length - 1];
 		};
+		this.setLastInput = function(value) {
+			expression[expression.length - 1] = value;
+		};
 		// adds an input (variable or operator) to the expression array if it is valid 
 		this.addInput = function(input) {
-			// if the last item of expression array was a variable (number), next should be an operator
-			if (typeof(this.lastInput()) === 'number') {
-				if (typeof(input) === 'string') {
-					expression.push(input);
-				}
-			} else {
-				if (typeof(input) === 'number') {
-					expression.push(input);
-				}
+			// if the last item of expression array was a variable (number) and input is a string
+			if (isNumber(this.lastInput()) && !isNumber(input)) {
+				expression.push(input);
+			} else if (!isNumber(this.lastInput()) && isNumber(input)) {
+				expression.push(input);
 			}
 		};
+		// gets the expression in string form
 		this.getExpression = function() {
 			return expression.join('');
-		}
+		};
 		this.getResult = function() {
 			return result;
+		};
+		this.handleInput = function(input) {
+			let inputType = isNumber(input) ? 'number' : 'string',
+				lastInput = calculator.lastInput(),
+				lastInputType = isNumber(lastInput) ? 'number' : 'string';
+
+			// if user wants to evaluate expression
+			if (input === '=' || input === 'enter') {
+				this.evaluate();
+			} else if (input === '.') {
+				// only allow a decimal point if last input is a number with no decimal point
+				// and last input isn't result
+				if (lastInputType === 'number' && lastInput !== this.getResult() && lastInput.indexOf('.') === -1) {
+					this.setLastInput(lastInput + '.');
+				}
+			} else if (inputType === 'number') {
+				// if current input and last input are numbers
+				if (lastInputType === 'number') {
+					// if last value of expression is result, clear expression
+					// fallback for NaN added
+					if (lastInput === this.getResult() || lastInput !== lastInput) {
+						this.clearAll();
+						this.addInput(input);
+					} else {
+						// continue adding more digits to last input (current number)
+						this.setLastInput(lastInput + input);
+					}
+				} else {
+					this.addInput(input);
+				}
+			} else if (inputType === 'string') {
+				// an operator was pressed
+				this.addInput(input);
+			}
 		};
 	}
 
@@ -69,16 +122,17 @@
 	// param2: boolean of whether or not shift was pressed
 	function getKeyPressed(keycode, isShifting) {
 		const keys = {
-			48: 0,
-		    49: 1,
-		    50: 2,
-		    51: 3,
-		    52: 4,
-		    53: 5,
-		    54: 6,
-		    55: 7,
-		    56: 8,
-		    57: 9,
+			13: "enter",
+			48: "0",
+		    49: "1",
+		    50: "2",
+		    51: "3",
+		    52: "4",
+		    53: "5",
+		    54: "6",
+		    55: "7",
+		    56: "8",
+		    57: "9",
 		    61: "=",
 		    106: "*",
 		    107: "+",
@@ -103,33 +157,15 @@
 
 	window.addEventListener('keydown', function(e) {
 		let keycode = e.keyCode || e.which,
-			key = getKeyPressed(keycode, e.shiftKey),
-			type = typeof(key),
-			lastInput = calculator.lastInput();
+			isShifting = e.shiftKey,
+			key = getKeyPressed(keycode, e.shiftKey);
 
-		// if user wants to evaluate expression
-		if (key === '=' || keycode === 13) {
-			if (calculator.isValidExpression()) {
-				calculator.evaluate();
-				screen.textContent = calculator.getResult();
-			}
-		} else if (key !== undefined) {
-			// if number was pressed and last input was number
-			if (type === 'number' && typeof(calculator.lastInput()) === 'number') {
-				// if last value of expression is result, clear expression
-				// fallback for NaN added
-				if (lastInput === calculator.getResult() || lastInput !== lastInput) {
-					calculator.clearAll();
-					calculator.addInput(key);
-				} else {
-					calculator.addInput((calculator.clearLast() * 10) + key);
-				}
-			} else {
-				calculator.addInput(key);
-			}
-			// display full expression
-			screen.textContent = calculator.getExpression();
+		if (key !== undefined) {
+			calculator.handleInput(key);
 		}
+
+		// display full expression
+		screen.textContent = calculator.getExpression();
 	});
 }());
 

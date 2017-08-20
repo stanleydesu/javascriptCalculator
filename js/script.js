@@ -51,7 +51,13 @@
 		this.evaluate = function() {
 			if (this.isValidExpression()) {
 				expression = expression.map(item => {
-					return isNumber(item) ? Number(item) : item;
+					if (isNumber(item)) {
+						return Number(item);
+					} else if (item === '^') {
+						return '**';
+					} else {
+						return item;
+					}
 				});
 				result = Number(eval(expression.join('')).toFixed(5));
 				expression.length = 0;
@@ -152,7 +158,9 @@
 	}
 
 	// variables
-	const screen = document.getElementById('screen');
+	const screen = document.getElementById('screen'),
+		  buttons = document.getElementById('buttons');
+
 	let calculator = new Calculator();
 
 	window.addEventListener('keydown', function(e) {
@@ -165,6 +173,12 @@
 		}
 
 		// display full expression
+		screen.textContent = calculator.getExpression();
+	});
+
+	buttons.addEventListener('click', function(e) {
+		let key = e.target.id;
+		calculator.handleInput(key);
 		screen.textContent = calculator.getExpression();
 	});
 }());

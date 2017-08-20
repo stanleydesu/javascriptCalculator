@@ -8,7 +8,6 @@
 			result = 0;
 
 		// private functions
-
 		function isNumber(n) {
 			// if n is a number, Number(n) equates to the number, and not NaN
 			// if n is an operator (e.g. '.' or '*'), Number(n) equates to NaN
@@ -16,7 +15,6 @@
 		}
 
 		// functions the user can use to manipulate private variables
-
 		// clear expression array and result
 		this.clearAll = function() {
 			expression.length = 0;
@@ -68,6 +66,7 @@
 		this.lastInput = function() {
 			return expression[expression.length - 1];
 		};
+		// sets last input of expression array
 		this.setLastInput = function(value) {
 			expression[expression.length - 1] = value;
 		};
@@ -84,24 +83,17 @@
 		this.getExpression = function() {
 			return expression.join('');
 		};
+		// gets the result
 		this.getResult = function() {
 			return result;
 		};
+		// handles all inputs
 		this.handleInput = function(input) {
 			let inputType = isNumber(input) ? 'number' : 'string',
 				lastInput = calculator.lastInput(),
 				lastInputType = isNumber(lastInput) ? 'number' : 'string';
 
-			// if user wants to evaluate expression
-			if (input === '=' || input === 'enter') {
-				this.evaluate();
-			} else if (input === '.') {
-				// only allow a decimal point if last input is a number with no decimal point
-				// and last input isn't result
-				if (lastInputType === 'number' && lastInput !== this.getResult() && lastInput.indexOf('.') === -1) {
-					this.setLastInput(lastInput + '.');
-				}
-			} else if (inputType === 'number') {
+			if (inputType === 'number') {
 				// if current input and last input are numbers
 				if (lastInputType === 'number') {
 					// if last value of expression is result, clear expression
@@ -117,8 +109,23 @@
 					this.addInput(input);
 				}
 			} else if (inputType === 'string') {
-				// an operator was pressed
-				this.addInput(input);
+				// if user wants to evaluate expression
+				if (input === '=' || input === 'enter') {
+					this.evaluate();
+				} else if (input === '.') {
+					// only allow a decimal point if last input is a number with no decimal point
+					// and last input isn't result
+					if (lastInputType === 'number' && lastInput !== this.getResult() && lastInput.indexOf('.') === -1) {
+						this.setLastInput(lastInput + '.');
+					}
+				} else if (input === 'AC') {
+					calculator.clearAll();
+				} else if (input === 'CE' || input === 'delete') {
+					calculator.clearLast();
+				} else {
+					// an operator was pressed
+					this.addInput(input);
+				}
 			}
 		};
 	}
@@ -128,7 +135,9 @@
 	// param2: boolean of whether or not shift was pressed
 	function getKeyPressed(keycode, isShifting) {
 		const keys = {
+			8: "delete",
 			13: "enter",
+			46: "delete",
 			48: "0",
 		    49: "1",
 		    50: "2",
@@ -151,6 +160,8 @@
 		    191: "/"
 		},
 		shiftKeys = {
+			53: "%",
+			54: "^",
 			56: "*",
 			187: "+"
 		};
@@ -177,7 +188,7 @@
 	});
 
 	buttons.addEventListener('click', function(e) {
-		let key = e.target.id;
+		let key = e.target.getAttribute('data-id');
 		calculator.handleInput(key);
 		screen.textContent = calculator.getExpression();
 	});

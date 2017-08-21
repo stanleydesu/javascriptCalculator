@@ -179,18 +179,18 @@
 			isShifting = e.shiftKey,
 			key = getKeyPressed(keycode, e.shiftKey);
 
-		if (key !== undefined) {
+		if (key) {
 			calculator.handleInput(key);
 		}
 
-		// display full expression
 		screen.textContent = calculator.getExpression();
 	});
 
 	buttons.addEventListener('click', function(e) {
 		let key = e.target.getAttribute('data-id');
-		calculator.handleInput(key);
+		if (key) {
+			calculator.handleInput(key);
+		}
 		screen.textContent = calculator.getExpression();
 	});
 }());
-

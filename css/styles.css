@@ -1,18 +1,25 @@
 :root {
 	--dark: #222;
-	--main: #F60;
+	--main: #929;
+	--gradient: linear-gradient(45deg, #f22, #22f);;
 }
 
 * {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	box-sizing: border-box;: 
+	box-sizing: border-box;
+	font-size: 24px;
 }
 
 body {
 	margin: 0;
 	background-color: var(--dark);
 	font-family: "Helvetica Neue", sans-serif;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
 }
 
 #calculator {
@@ -22,8 +29,8 @@ body {
 	transform: translate(-50%, -50%);
 	width: 280px;
 	height: 400px;
-	padding: 1em;
-	background-color: var(--main);
+	padding: .5rem;
+	background-image: var(--gradient);
 	border-radius: 5px;
 	display: flex;
 	justify-content: space-between;
@@ -32,33 +39,49 @@ body {
 
 #screen {
 	position: relative;
-	height: 3em;
+	height: 2em;
 	padding-left: .5em;
 	padding-right: .5em;
 	border-radius: 4px;
 	background-color: var(--dark);
 	color: var(--main);
-	
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
+	overflow: hidden;
 }
 
 #buttons {
 	flex: 1;
-	padding-top: 1em;
+	padding-top: .5em;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 .button {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	float: left;
-	width: 62px;
-	height: 62px;
-	border: 1px solid var(--main);
-	border-radius: 5px;
-	background-color: var(--dark);
+	width: 58px;
+	height: 58px;
+	border-radius: 4px;
+	border: 2px solid transparent;
+	background: var(--dark);
 	color: var(--main);
-	line-height: 1em;
+	font-size: 20px;
+	font-weight: 200;
+	cursor: pointer;
+	transition: all .2s ease;
+}
+
+.active {
+	background-color: transparent;
+	border-color: var(--dark);
+	color: var(--dark);
 }

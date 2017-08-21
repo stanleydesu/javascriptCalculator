@@ -118,9 +118,9 @@
 					if (lastInputType === 'number' && lastInput !== this.getResult() && lastInput.indexOf('.') === -1) {
 						this.setLastInput(lastInput + '.');
 					}
-				} else if (input === 'AC') {
+				} else if (input === 'AC' || input === 'A') {
 					calculator.clearAll();
-				} else if (input === 'CE' || input === 'delete') {
+				} else if (input === 'CE' || input === 'delete' || input === 'C') {
 					calculator.clearLast();
 				} else {
 					// an operator was pressed
@@ -149,6 +149,8 @@
 		    56: "8",
 		    57: "9",
 		    61: "=",
+		    65: "A",
+		    67: "C",
 		    106: "*",
 		    107: "+",
 		    109: "-",

@@ -1,7 +1,7 @@
 :root {
 	--dark: #222;
 	--main: #929;
-	--gradient: linear-gradient(45deg, #f22, #22f);;
+	--gradient: linear-gradient(45deg, #f22, #22f);
 }
 
 * {
@@ -9,17 +9,19 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	font-size: 24px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 body {
 	margin: 0;
 	background-color: var(--dark);
 	font-family: "Helvetica Neue", sans-serif;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
 }
 
 #calculator {
@@ -77,10 +79,9 @@ body {
 	font-size: 20px;
 	font-weight: 200;
 	cursor: pointer;
-	transition: all .2s ease;
 }
 
-.active {
+.button:active {
 	background-color: transparent;
 	border-color: var(--dark);
 	color: var(--dark);

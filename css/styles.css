@@ -81,7 +81,7 @@ body {
 	cursor: pointer;
 }
 
-.button:active {
+.button:active, .active {
 	background-color: transparent;
 	border-color: var(--dark);
 	color: var(--dark);

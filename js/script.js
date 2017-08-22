@@ -110,7 +110,7 @@
 				}
 			} else if (inputType === 'string') {
 				// if user wants to evaluate expression
-				if (input === '=' || input === 'enter') {
+				if (input === '=') {
 					this.evaluate();
 				} else if (input === '.') {
 					// only allow a decimal point if last input is a number with no decimal point
@@ -118,9 +118,9 @@
 					if (lastInputType === 'number' && lastInput !== this.getResult() && lastInput.indexOf('.') === -1) {
 						this.setLastInput(lastInput + '.');
 					}
-				} else if (input === 'AC' || input === 'A') {
+				} else if (input === 'AC') {
 					calculator.clearAll();
-				} else if (input === 'CE' || input === 'delete' || input === 'C') {
+				} else if (input === 'CE') {
 					calculator.clearLast();
 				} else {
 					// an operator was pressed
@@ -135,9 +135,9 @@
 	// param2: boolean of whether or not shift was pressed
 	function getKeyPressed(keycode, isShifting) {
 		const keys = {
-			8: "delete",
-			13: "enter",
-			46: "delete",
+			8: "CE",
+			13: "=",
+			46: "CE",
 			48: "0",
 		    49: "1",
 		    50: "2",
@@ -149,8 +149,8 @@
 		    56: "8",
 		    57: "9",
 		    61: "=",
-		    65: "A",
-		    67: "C",
+		    65: "AC",
+		    67: "CE",
 		    106: "*",
 		    107: "+",
 		    109: "-",
@@ -170,6 +170,15 @@
 		return isShifting ? shiftKeys[keycode] : keys[keycode]; 
 	}
 
+	function toggleActiveState(button) {
+		if (button) {
+			button.classList.toggle('active');
+			setTimeout(function() {
+				button.classList.toggle('active');
+			}, 100);
+		}
+	}
+
 	// variables
 	const screen = document.getElementById('screen'),
 		  buttons = document.getElementById('buttons');
@@ -182,6 +191,7 @@
 			key = getKeyPressed(keycode, e.shiftKey);
 
 		if (key) {
+			toggleActiveState(document.querySelector(`[data-id="${key}"`));
 			calculator.handleInput(key);
 		}
 

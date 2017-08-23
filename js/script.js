@@ -122,6 +122,11 @@
 					calculator.clearAll();
 				} else if (input === 'CE') {
 					calculator.clearLast();
+				} else if (input === '±') {
+					// if last input was a number, change last input to its additive inverse / opposite
+					if (isNumber(calculator.lastInput())) {
+						calculator.setLastInput(calculator.lastInput() * -1);
+					}
 				} else {
 					// an operator was pressed
 					this.addInput(input);

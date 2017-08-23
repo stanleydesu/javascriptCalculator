@@ -131,8 +131,6 @@
 	}
 
 	// returns the value of key pressed by user
-	// param1: ascii value of key pressed
-	// param2: boolean of whether or not shift was pressed
 	function getKeyPressed(keycode, isShifting) {
 		const keys = {
 			8: "CE",
@@ -170,6 +168,7 @@
 		return isShifting ? shiftKeys[keycode] : keys[keycode]; 
 	}
 
+	// temporarily activates active state of button
 	function toggleActiveState(button) {
 		if (button) {
 			button.classList.toggle('active');
@@ -194,7 +193,6 @@
 			toggleActiveState(document.querySelector(`[data-id="${key}"`));
 			calculator.handleInput(key);
 		}
-
 		screen.textContent = calculator.getExpression();
 	});
 

@@ -50,6 +50,7 @@ body {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
+	white-space: nowrap;
 	overflow: hidden;
 }
 

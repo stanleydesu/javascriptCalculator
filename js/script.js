@@ -14,6 +14,29 @@
 			return !Object.is(NaN, Number(n)) || n !== n;
 		}
 
+		// cleans the expression's items
+		function cleanExpression(expr) {
+			for (let i = 0; i < expr.length; ++i) {
+				if (isNumber(expr[i])) {
+					// clean up the number by removing trailing zeroes
+					expr[i] = Number(expr[i]);
+				} else {
+					if (expr[i] === '-') {
+						// if there are two consecutive negative signs
+						if (i < expr.length && expr[i + 1] < 0) {
+							// convert "- -x" to "+ x"
+							expr[i] = '+';
+							expr[i + 1] *= -1;
+						}
+					} else if (expr[i] === '^') {
+						// set power of to eval() equivalent
+						expr[i] = '**';
+					}
+				}
+			}
+			return expr;
+		}
+
 		// functions the user can use to manipulate private variables
 		// clear expression array and result
 		this.clearAll = function() {
@@ -48,16 +71,7 @@
 		// evaluates the expression array, expression array becomes result
 		this.evaluate = function() {
 			if (this.isValidExpression()) {
-				expression = expression.map(item => {
-					if (isNumber(item)) {
-						return Number(item);
-					} else if (item === '^') {
-						return '**';
-					} else {
-						return item;
-					}
-				});
-				result = Number(eval(expression.join('')).toFixed(5));
+				result = Number(eval(cleanExpression(expression).join('')).toFixed(5));
 				expression.length = 0;
 				expression.push(result);
 			}
@@ -172,16 +186,6 @@
 		return isShifting ? shiftKeys[keycode] : keys[keycode]; 
 	}
 
-	// temporarily activates active state of button
-	function toggleActiveState(button) {
-		if (button) {
-			button.classList.toggle('active');
-			setTimeout(function() {
-				button.classList.toggle('active');
-			}, 100);
-		}
-	}
-
 	// variables
 	const screen = document.getElementById('screen'),
 		  buttons = document.getElementById('buttons');
@@ -192,9 +196,7 @@
 		let keycode = e.keyCode || e.which,
 			isShifting = e.shiftKey,
 			key = getKeyPressed(keycode, e.shiftKey);
-
 		if (key) {
-			toggleActiveState(document.querySelector(`[data-id="${key}"`));
 			calculator.handleInput(key);
 		}
 		screen.textContent = calculator.getExpression();

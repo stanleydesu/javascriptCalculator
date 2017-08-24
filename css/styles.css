@@ -71,9 +71,8 @@ body {
 	justify-content: center;
 	align-items: center;
 	float: left;
-	width: 58px;
-	height: 58px;
-	border-radius: 4px;
+	width: 61px;
+	height: 60px;
 	border: 2px solid transparent;
 	background: var(--dark);
 	color: var(--main);
@@ -82,7 +81,7 @@ body {
 	cursor: pointer;
 }
 
-.button:active, .active {
+.button:hover {
 	background-color: transparent;
 	border-color: var(--dark);
 	color: var(--dark);

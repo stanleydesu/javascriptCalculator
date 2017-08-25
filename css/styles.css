@@ -81,7 +81,7 @@ body {
 	cursor: pointer;
 }
 
-.button:hover {
+.button:hover, .highlight {
 	background-color: transparent;
 	border-color: var(--dark);
 	color: var(--dark);

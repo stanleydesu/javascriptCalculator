@@ -168,8 +168,19 @@
 		    61: "=",
 		    65: "AC",
 		    67: "CE",
-		    106: "*",
+		    96: "0",
+			97: "1",
+ 			98: "2",
+ 			99: "3",
+ 			100: "4",
+ 			101: "5",
+ 			102: "6",
+ 			103: "7",
+ 			104: "8",
+ 			105: "9",
+ 		    106: "*",
 		    107: "+",
+		    108: "-",
 		    109: "-",
 		    110: ".",
 		    111: "/",
@@ -186,6 +197,15 @@
 		return isShifting ? shiftKeys[keycode] : keys[keycode]; 
 	}
 
+	function highlight(button) {
+		if (button) {
+			button.classList.toggle('highlight');
+			setTimeout(function() {
+				button.classList.toggle('highlight');
+			}, 200);
+		}
+	}
+
 	// variables
 	const screen = document.getElementById('screen'),
 		  buttons = document.getElementById('buttons');
@@ -197,6 +217,7 @@
 			isShifting = e.shiftKey,
 			key = getKeyPressed(keycode, e.shiftKey);
 		if (key) {
+			highlight(document.querySelector(`[data-id="${key}"]`));
 			calculator.handleInput(key);
 		}
 		screen.textContent = calculator.getExpression();

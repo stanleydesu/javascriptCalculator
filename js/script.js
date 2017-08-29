@@ -8,14 +8,14 @@
 			result = 0;
 
 		// private functions
-		function isNumber(n) {
+		const isNumber = (n) => {
 			// if n is a number, Number(n) equates to the number, and not NaN
 			// if n is an operator (e.g. '.' or '*'), Number(n) equates to NaN
 			return !Object.is(NaN, Number(n)) || n !== n;
 		}
 
 		// cleans the expression's items
-		function cleanExpression(expr) {
+		const cleanExpression = (expr) => {
 			for (let i = 0; i < expr.length; ++i) {
 				if (isNumber(expr[i])) {
 					// clean up the number by removing trailing zeroes
@@ -39,16 +39,16 @@
 
 		// functions the user can use to manipulate private variables
 		// clear expression array and result
-		this.clearAll = function() {
+		this.clearAll = () => {
 			expression.length = 0;
 			result = 0;
 		};
 		// clear last variable / operator
-		this.clearLast = function() {
+		this.clearLast = () => {
 			return expression.pop();
 		};
 		// check if current expression is valid
-		this.isValidExpression = function() {
+		this.isValidExpression = () => {
 			let shouldBeNumber = true;
 			for (let i = 0, len = expression.length; i < len; ++i) {
 				if (shouldBeNumber) {
@@ -69,7 +69,7 @@
 			return isNumber(expression[expression.length - 1]);
 		};
 		// evaluates the expression array, expression array becomes result
-		this.evaluate = function() {
+		this.evaluate = () => {
 			if (this.isValidExpression()) {
 				result = Number(eval(cleanExpression(expression).join('')).toFixed(5));
 				expression.length = 0;
@@ -77,15 +77,15 @@
 			}
 		};
 		// retrieves last input of expression array
-		this.lastInput = function() {
+		this.lastInput = () => {
 			return expression[expression.length - 1];
 		};
 		// sets last input of expression array
-		this.setLastInput = function(value) {
+		this.setLastInput = (value) => {
 			expression[expression.length - 1] = value;
 		};
 		// adds an input (variable or operator) to the expression array if it is valid 
-		this.addInput = function(input) {
+		this.addInput = (input) => {
 			// if the last item of expression array was a variable (number) and input is a string
 			if (isNumber(this.lastInput()) && !isNumber(input)) {
 				expression.push(input);
@@ -94,17 +94,17 @@
 			}
 		};
 		// gets the expression in string form
-		this.getExpression = function() {
+		this.getExpression = () => {
 			return expression.join('');
 		};
 		// gets the result
-		this.getResult = function() {
+		this.getResult = () => {
 			return result;
 		};
 		// handles all inputs
-		this.handleInput = function(input) {
+		this.handleInput = (input) => {
 			let inputType = isNumber(input) ? 'number' : 'string',
-				lastInput = calculator.lastInput(),
+				lastInput = this.lastInput(),
 				lastInputType = isNumber(lastInput) ? 'number' : 'string';
 
 			if (inputType === 'number') {
@@ -133,13 +133,13 @@
 						this.setLastInput(lastInput + '.');
 					}
 				} else if (input === 'AC') {
-					calculator.clearAll();
+					this.clearAll();
 				} else if (input === 'CE') {
-					calculator.clearLast();
+					this.clearLast();
 				} else if (input === '±') {
 					// if last input was a number, change last input to its additive inverse / opposite
-					if (isNumber(calculator.lastInput())) {
-						calculator.setLastInput(calculator.lastInput() * -1);
+					if (isNumber(lastInput)) {
+						this.setLastInput(lastInput * -1);
 					}
 				} else {
 					// an operator was pressed
@@ -150,7 +150,7 @@
 	}
 
 	// returns the value of key pressed by user
-	function getKeyPressed(keycode, isShifting) {
+	const getKeyPressed = (keycode, isShifting) => {
 		const keys = {
 			8: "CE",
 			13: "=",
@@ -197,7 +197,7 @@
 		return isShifting ? shiftKeys[keycode] : keys[keycode]; 
 	}
 
-	function highlight(button) {
+	const highlight = (button) => {
 		if (button) {
 			button.classList.toggle('highlight');
 			setTimeout(function() {

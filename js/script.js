@@ -18,24 +18,28 @@
 
 		// cleans the expression's items
 		cleanExpression(expr) {
-			return expr.map((curr, index, arr) => {
-				if (this.isNumber(curr)) {
+			let exprCpy = expr.slice();
+			for (let i = 0; i < exprCpy.length; ++i) {
+				if (this.isNumber(exprCpy[i])) {
 					// clean up the number by removing trailing zeroes
-					curr = Number(curr);
+					// and place parenthesis around number
+					// so powering negative numbers doesn't cause error
+					exprCpy[i] = `( ${Number(exprCpy[i])} )`;
 				} else {
-					if (curr === '-') {
+					if (exprCpy[i] === '-') {
 						// if there are two consecutive negative signs
-						if (i < expr.length && expr[i + 1] < 0) {
+						if (i < exprCpy.length && exprCpy[i + 1] < 0) {
 							// convert "- -x" to "+ x"
-							curr = '+';
-							arr[index + 1] *= -1;
+							exprCpy[i] = '+';
+							exprCpy[i + 1] *= -1;
 						}
-					} else if (curr === '^') {
+					} else if (exprCpy[i] === '^') {
 						// set power of to eval() equivalent
-						curr = '**';
+						exprCpy[i] = '**';
 					}
 				}
-			});
+			}
+			return exprCpy;
 		}
 
 		// clear expression array and result

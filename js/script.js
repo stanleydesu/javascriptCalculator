@@ -18,25 +18,24 @@
 
 		// cleans the expression's items
 		cleanExpression(expr) {
-			for (let i = 0; i < expr.length; ++i) {
-				if (this.isNumber(expr[i])) {
+			return expr.map((curr, index, arr) => {
+				if (this.isNumber(curr)) {
 					// clean up the number by removing trailing zeroes
-					expr[i] = Number(expr[i]);
+					curr = Number(curr);
 				} else {
-					if (expr[i] === '-') {
+					if (curr === '-') {
 						// if there are two consecutive negative signs
 						if (i < expr.length && expr[i + 1] < 0) {
 							// convert "- -x" to "+ x"
-							expr[i] = '+';
-							expr[i + 1] *= -1;
+							curr = '+';
+							arr[index + 1] *= -1;
 						}
-					} else if (expr[i] === '^') {
+					} else if (curr === '^') {
 						// set power of to eval() equivalent
-						expr[i] = '**';
+						curr = '**';
 					}
 				}
-			}
-			return expr;
+			});
 		}
 
 		// clear expression array and result
@@ -209,9 +208,8 @@
 
 	// variables
 	const screen = document.getElementById('screen'),
-		  buttons = document.getElementById('buttons');
-
-	let calculator = new Calculator();
+		  buttons = document.getElementById('buttons'),
+		  calculator = new Calculator();
 
 	window.addEventListener('keydown', function(e) {
 		let keycode = e.keyCode || e.which,
